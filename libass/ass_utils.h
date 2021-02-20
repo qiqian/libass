@@ -31,6 +31,11 @@
 
 #include "ass.h"
 
+// Always enable native-endian mode, since we don't care about cross-platform consistency of the hash
+#define WYHASH_LITTLE_ENDIAN 1
+
+#include "wyhash.h"
+
 #ifndef SIZE_MAX
 #define SIZE_MAX ((size_t)-1)
 #endif
@@ -182,26 +187,11 @@ static inline int double_to_d22(double x)
     return lrint(x * 0x400000);
 }
 
-#define ASS_HASH_INIT 0x811c9dc5U
-#define FNV1_32A_PRIME 16777619U
+#define ASS_HASH_INIT 0U
 
-static inline uint32_t ass_hash_buf(const void *buf, size_t len, uint32_t hval)
+static inline uint64_t ass_hash_buf(const void *buf, size_t len, uint64_t hval)
 {
-    if (!len)
-        return hval;
-
-    const uint8_t *bp = buf;
-    size_t n = (len + 3) / 4;
-
-    switch (len % 4) {
-    case 0: do { hval ^= *bp++; hval *= FNV1_32A_PRIME; //-fallthrough
-    case 3:      hval ^= *bp++; hval *= FNV1_32A_PRIME; //-fallthrough
-    case 2:      hval ^= *bp++; hval *= FNV1_32A_PRIME; //-fallthrough
-    case 1:      hval ^= *bp++; hval *= FNV1_32A_PRIME;
-               } while (--n > 0);
-    }
-
-    return hval;
+    return wyhash(buf, len, hval, _wyp);
 }
 
 static inline int mystrtoi(char **p, int *res)
