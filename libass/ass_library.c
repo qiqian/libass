@@ -150,3 +150,11 @@ void ass_set_message_cb(ASS_Library *priv,
         priv->msg_callback_data = data;
     }
 }
+
+void ass_set_event_cb(ASS_Library* priv, void (*event_cb)(const char*, void*), void* data)
+{
+    if (event_cb) {
+        priv->event_cb = event_cb;
+        priv->event_callback_data = data;
+    }
+}

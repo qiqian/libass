@@ -2634,6 +2634,11 @@ ass_render_event(ASS_Renderer *render_priv, ASS_Event *event,
     }
 
     free_render_context(render_priv);
+
+	if (render_priv->library->event_cb) {
+		(render_priv->library->event_cb)(event->Text,
+                                            render_priv->library->event_callback_data);
+	}
     init_render_context(render_priv, event);
 
     if (!parse_events(render_priv, event))

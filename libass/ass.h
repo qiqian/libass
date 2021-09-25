@@ -306,6 +306,13 @@ void ass_set_message_cb(ASS_Library *priv, void (*msg_cb)
                         (int level, const char *fmt, va_list args, void *data),
                         void *data);
 
+/*
+ * event callback - qiqian82
+ */
+void ass_set_event_cb(ASS_Library* priv, void (*event_cb)
+                        (const char* event, void* data),
+	                    void* data);
+
 /**
  * \brief Initialize the renderer.
  * \param priv library handle

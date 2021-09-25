@@ -36,6 +36,8 @@ struct ass_library {
     size_t num_fontdata;
     void (*msg_callback)(int, const char *, va_list, void *);
     void *msg_callback_data;
+    void (*event_cb)(const char* event, void *);
+    void* event_callback_data;
 };
 
 char *read_file(struct ass_library *library, char *fname, size_t *bufsize);
